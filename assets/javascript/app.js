@@ -16,115 +16,128 @@ $(document).ready(function() {
 	}
 	];
 
-	console.log(questions[0].answers[2]);
 
 	var questionNum = 0;
 	var correctNum = 0;
 	var wrongNum = 0;
+	var UnanswerNum = 0;
 	var currentAnswer = "";
-	var stop;
-	var time = 30;
+	var stop = "";
+	var time = 5;
 
 	function reset(){
 
-		var questionNum = 0;
-		var correctNum = 0;
-		var wrongNum = 0;
-		var currentAnswer = "";
+		questionNum = 0;
+		correctNum = 0;
+		wrongNum = 0;
+		UnanswerNum = 0;
+		currentAnswer = "";
+		stop = "";
+		time = 5;
+		afterAnswer();
+
 	}
 
 
 	$("#start").on("click",function(){
 		afterAnswer();
-		$("#timer").text("You have " +time+ " seconds")
-		timer();
 	});
 
-	function timer(){
-		setInterval(count,1000);
-	}
+
+	$(document).on("click","#reset",function(){
+		reset();
+	});
 
 	function count (){
 		time--;
 		$("#timer").text("You have " +time+ " seconds")
+		if(time===0){
+		outOfTime(questionNum);
+		}	
 	}
 
-	function dislayQuestion (x){
 
-		var current = questions[x];
-		// console.log(current.question);
-		var div1 = $("<div class='question-display' > Solve this problem " + current.question +"</div>")
-		
-		$("#question-section").append(div1);
+	function dislayQuestion(x){
 
-		for (i=0;i<current.answers.length;i++){
-		var div2 = $("<div class='answers-list'>"+current.answers[i] +"</div>")
+		$("#timer").text("You have " +time+ " seconds")
+		stop = setInterval(count,1000);
 
-		$("#question-section").append(div2);
-
+		if(questionNum===(questions.length)){
+			//clear interval doesn't work becuz timer function did not happen
+			clearInterval(stop);
+			var div1 = $("<div class='question-display' > you got " + correctNum +" out of "+ questionNum +"</div>")
+			$("#question-section").append(div1);
+			var div2 = $("<button id='reset'>Start Over?</button> ")
+			$("#question-section").append(div2);
+			
 		}
-		console.log(current.correct);
+		else{
+			var current = questions[x];
+			// console.log(current.question);
+			var div1 = $("<div class='question-display' > Solve this problem " + current.question +"</div>")
+			// console.log("QL"+ questions.length)
+			// console.log("Q#" +questionNum);
+			$("#question-section").append(div1);
 
-		$(".answers-list").on("click",function(){
-			// console.log("this worked!")
-			currentAnswer = $(this).text() 
-			console.log(currentAnswer);
+			for (i=0;i<current.answers.length;i++){
+			var div2 = $("<div class='answers-list'>"+current.answers[i] +"</div>")
 
-			if(currentAnswer === questions[x].correct){
-			
-			correctAnswer(x);
+			$("#question-section").append(div2);
+
 			}
-			else {
-			
-			wrongAnswer(x);
-			}
 
-		});
+			$(".answers-list").on("click",function(){
+				// console.log("this worked!")
+				currentAnswer = $(this).text() 
+				console.log(currentAnswer);
+				$("#question-section").empty();
 
-
+				if(currentAnswer === questions[x].correct){
+				
+				correctAnswer(x);
+				}
+				else {
+				wrongAnswer(x);
+				}
+			});
+		}
 	};
 
 	function correctAnswer (x){
-
 		var current = questions[x];
 		var div3 = $("<div class='answers-list'>Correct!</div>");
 		correctNum++;
-		$("#question-section").empty();
+		clearInterval(stop);
 		$("#question-section").append(div3);
 		questionNum++;
-		setTimeout(afterAnswer,3000);
-
+		setTimeout(afterAnswer,1000);
 	};
 
 	function wrongAnswer (x){
 		var current = questions[x];
 		var div4 = $("<div class='answers-list'> Wrong! This is the answer: "+current.correct +"</div>");
-		$("#question-section").empty();
+		clearInterval(stop);
 		$("#question-section").append(div4);
+		wrongNum++;
 		questionNum++;
-		setTimeout(afterAnswer,3000);
-		
+		setTimeout(afterAnswer,1000);
 	}
 
-	function outOfTime(){
+	function outOfTime(x){
 		var current = questions[x];
 		var div4 = $("<div class='answers-list'> Out of Time! This is the answer: "+current.correct +"</div>");
 		$("#question-section").empty();
 		$("#question-section").append(div4);
+		clearInterval(stop);
 		questionNum++;
-		setTimeout(afterAnswer,3000);
+		UnanswerNum++;
+		setTimeout(afterAnswer,1000);
 	}
 
 	function afterAnswer (){
 		$("#question-section").empty();
+		time = 10;
 		dislayQuestion (questionNum);
-	}	
-
-
-	if(questionNum===(questions.length-1)){
-		console.log("you got "+ correctNum+" right!");
-		reset();
 	}
-
 
 });
