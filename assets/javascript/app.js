@@ -65,10 +65,13 @@ $(document).ready(function() {
 		if(questionNum===(questions.length)){
 			//clear interval doesn't work becuz timer function did not happen
 			clearInterval(stop);
-			var div1 = $("<div class='question-display' > you got " + correctNum +" out of "+ questionNum +"</div>")
-			$("#question-section").append(div1);
-			var div2 = $("<button id='reset'>Start Over?</button> ")
-			$("#question-section").append(div2);
+			var div1 = $("<div class='question-display' > Correct: " + correctNum +"</div>")
+			var div2 = $("<div class='question-display' > Wrong: " + wrongNum +"</div>")
+			var div3 = $("<div class='question-display' > Unanswered: " + UnanswerNum +"</div>")
+
+			$("#question-section").append(div1, div2, div3);
+			var div4 = $("<button id='reset'>Start Over?</button> ")
+			$("#question-section").append(div4);
 			
 		}
 		else{

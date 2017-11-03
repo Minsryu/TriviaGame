@@ -21,7 +21,6 @@ header{
 	height: 500px;
 	background-color: black;
 	padding: 30px;
-	position: relative;
 	border: 2px solid white;
 	border-radius: 20px;
 	opacity: .9;
@@ -37,6 +36,7 @@ header{
 #question-section{
 	font-size: 20px;
 	color: white;
+	position: relative;
 }
 
 .question-display,
@@ -56,7 +56,7 @@ button {
 	width: 200px;
 	height: 40px;
 	position: absolute;
-	bottom: 150px;
+	bottom: -100px;
 	left:0;
 	right:0;
 	background: none;
@@ -65,4 +65,8 @@ button {
 	font-size: 20px;
 }
 
+button:hover{
+	background-color: white;
+	color:black;
+}
 
